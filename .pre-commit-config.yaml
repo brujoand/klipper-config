@@ -1,0 +1,30 @@
+# Pre-commit hooks for Klipper configuration
+repos:
+  # General file hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Ensure files end with newline
+      - id: mixed-line-ending
+        name: Check for mixed line endings
+        args: ['--fix=lf']
+      - id: check-merge-conflict
+        name: Check for merge conflict markers
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=500']
+
+  # Local hooks for Klipper-specific validation
+  - repo: local
+    hooks:
+      # Validate Klipper config syntax
+      - id: klipper-config-check
+        name: Validate Klipper config syntax
+        entry: bash -c 'python3 ~/klipper/klippy/klippy.py printer.cfg -I ~/klipper/klippy/extras/ -d /tmp -v 2>&1 | grep -i "error\|command format mismatch\|unknown command" && exit 1 || exit 0'
+        language: system
+        files: \.(cfg)$
+        pass_filenames: false
+        verbose: true
