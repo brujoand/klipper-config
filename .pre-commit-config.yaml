@@ -17,6 +17,13 @@ repos:
         name: Check for large files
         args: ['--maxkb=500']
 
+  # Secret detection. This repo holds moonraker.conf and KlipperScreen.conf,
+  # which are exactly the kind of file that grows an API key by accident.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
+
   # Local hooks for Klipper-specific validation
   - repo: local
     hooks:
